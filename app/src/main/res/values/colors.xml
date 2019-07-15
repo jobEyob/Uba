@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#008577</color>-->
+    <!--<color name="colorPrimaryDark">#00574B</color>-->
+    <!--<color name="colorAccent">#D81B60</color>-->
+
+    <!-- The app branding color for the app bar -->
+    <color name="colorPrimary">#f0514b</color>
+
+    <!-- Darker variant for the status bar and contextual app bars -->
+    <color name="colorPrimaryDark">#c0403c</color>
+
+    <!-- Accent color for UI controls like checkboxes and text fields -->
+    <color name="colorAccent">#F0514B</color>
+
+    <!-- Primary color for the editor -->
+    <color name="editorColorPrimary">#f0514b</color>
+
+    <!-- Primary dark color for the editor -->
+    <color name="editorColorPrimaryDark">#C0403C</color>
+
+    <!-- Color for the labels in the list view -->
+    <color name="colorListViewLabels">#9E9E9E</color>
+
+    <!-- Color for the positive stock level -->
+    <color name="colorPositiveStock">#4CAF50</color>
+
+    <!-- Color for the empty stock level -->
+    <!--login activity-->
+    <color name="primary">#4ae43f</color>
+    <color name="primary_dark">#2ce129</color>
+    <color name="primary_darker">#5acc1d</color>
+    <color name="accent">#ece6e6</color>
+    <color name="colorEmptyStock">#F44336</color>
+    <color name="black">#000000</color>
+    <color name="jet">#222222</color>
+    <color name="oil">#333333</color>
+    <color name="monsoon">#777777</color>
+    <color name="jumbo">#888888</color>
+    <color name="aluminum">#999999</color>
+    <color name="base">#AAAAAA</color>
+    <color name="iron">#cccccc</color>
+    <color name="white">#FFFFFF</color>
+</resources>

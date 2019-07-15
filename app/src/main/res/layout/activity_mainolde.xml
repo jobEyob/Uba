@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/add_item_button"
+            android:layout_width="146dp"
+            android:layout_height="146dp"
+            android:background="@drawable/circle3"
+            android:drawableTop="@drawable/ic_add_new_product"
+            android:onClick="Addprodact"
+            android:paddingTop="20dp"
+            android:text="Add product"
+            android:textColor="#fff"
+            android:textSize="17sp" />
+
+        <Button
+            android:layout_width="145dp"
+            android:layout_height="145dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/circle"
+            android:drawableTop="@android:drawable/ic_menu_edit"
+            android:onClick="Categoty"
+            android:paddingTop="20dp"
+            android:text="category"
+            android:textColor="#fff"
+            android:textSize="17sp" />
+
+        <!--<Button-->
+            <!--android:layout_width="146dp"-->
+            <!--android:layout_height="146dp"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:background="@drawable/circle2"-->
+            <!--android:drawableTop="@android:drawable/ic_dialog_info"-->
+            <!--android:paddingTop="20dp"-->
+            <!--android:text="Info"-->
+            <!--android:textColor="#fff" />-->
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"></RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="146dp"
+            android:layout_height="146dp"
+            android:background="@drawable/circle4"
+            android:drawableTop="@android:drawable/ic_input_get"
+            android:onClick="productList"
+            android:paddingTop="20dp"
+            android:text="product List"
+            android:textColor="#fff"
+            android:textSize="17sp" />
+
+        <Button
+            android:layout_width="146dp"
+            android:layout_height="146dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/circle6"
+            android:drawableTop="@android:drawable/ic_menu_add"
+            android:onClick="Additem"
+            android:paddingTop="20dp"
+            android:text="add Item"
+            android:textColor="#fff" />
+
+        <!--<Button-->
+            <!--android:layout_width="146dp"-->
+            <!--android:layout_height="146dp"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:background="@drawable/circle5"-->
+            <!--android:drawableTop="@android:drawable/ic_dialog_info"-->
+            <!--android:paddingTop="20dp"-->
+            <!--android:text="Info"-->
+            <!--android:textColor="#fff" />-->
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"></RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="146dp"
+            android:layout_height="146dp"
+            android:background="@drawable/circle5"
+            android:drawableTop="@android:drawable/ic_menu_mylocation"
+            android:onClick="location"
+            android:paddingTop="20dp"
+            android:text="location"
+            android:textColor="#fff" />
+
+        <Button
+            android:layout_width="146dp"
+            android:layout_height="146dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/circle2"
+            android:drawableTop="@android:drawable/ic_menu_report_image"
+            android:onClick="report"
+            android:paddingTop="20dp"
+            android:text="Report"
+            android:textColor="#fff" />
+
+        <!--<Button-->
+            <!--android:layout_width="146dp"-->
+            <!--android:layout_height="146dp"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:background="@drawable/circle"-->
+            <!--android:drawableTop="@android:drawable/ic_menu_report_image"-->
+            <!--android:paddingTop="20dp"-->
+            <!--android:text="Report"-->
+            <!--android:textColor="#fff" />-->
+    </LinearLayout>
+
+</LinearLayout>

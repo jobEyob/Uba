@@ -1,0 +1,363 @@
+<resources>
+    <string name="app_name">Uba inventory</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Title for the activity to add a new product [CHAR LIMIT=20] -->
+    <string name="editor_activity_title_new_product">Add a Product</string>
+
+    <!-- Title for the activity to edit an existing product [CHAR LIMIT=20] -->
+    <string name="editor_activity_title_edit_product">Edit Product</string>
+
+    <!-- Title for the activity to edit an existing product [CHAR LIMIT=20] -->
+    <string name="catalog_activity_title_product_list">Product List</string>
+
+
+    <!--
+    *
+    * EMPTY STOCK TEXTS
+    *
+    *-->
+
+    <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
+    <string name="empty_view_title_text">Nothing in stock&#8230;</string>
+
+    <!-- Subtitle text for the empty view that prompts the user to add a product [CHAR LIMIT=50] -->
+    <string name="empty_view_subtitle_text">Get started by adding a new product</string>
+
+    <!--
+    *
+    * MENU LABELS
+    *
+    *-->
+
+    <!-- Label for overflow menu option that inserts fake product data into the app [CHAR LIMIT=20] -->
+    <string name="action_insert_dummy_data">Insert Dummy Data</string>
+
+    <!-- Label for overflow menu option that deletes all product data in the app [CHAR LIMIT=20] -->
+    <string name="action_delete_all_entries">Delete All Products</string>
+
+    <!-- Label for editor menu option to save product and leave editor [CHAR LIMIT=20] -->
+    <string name="action_save">Save</string>
+
+    <!-- Label for editor overflow menu option that deletes the current product [CHAR LIMIT=20] -->
+    <string name="action_delete">Delete</string>
+
+    <!--
+    *
+    * CATALOGUE LIST LABELS
+    *
+    *-->
+
+    <!-- Label for the unit price TextView [CHAR LIMIT=20] -->
+    <string name="unit_price_label">Unit Price :&#160;</string>
+
+    <!-- Label for the stock level TextView [CHAR LIMIT=20] -->
+    <string name="stock_level_label">Stock Level :&#160;</string>
+
+    <!-- Label for the button to sell products' units [CHAR LIMIT=20] -->
+    <string name="sell_button">Sell</string>
+
+    <!--
+    *
+    * EDITOR HEADERS
+    *
+    *-->
+
+    <!-- Label for product's image content description [CHAR LIMIT=30] -->
+    <string name="image_product">Image of the product</string>
+
+    <!-- Label for name product of attributes in the editor [CHAR LIMIT=30] -->
+    <string name="Product_name">Name</string>
+
+    <!-- Label for  product code of attributes in the editor [CHAR LIMIT=30] -->
+    <string name="Product_code">Code</string>
+
+    <!-- Label for product's image content description [CHAR LIMIT=30] -->
+    <string name="product_description">Description</string>
+
+    <!-- Label for product's category content description [CHAR LIMIT=30] -->
+    <string name="product_category">Category</string>
+
+    <!-- Label for product's item content description [CHAR LIMIT=30] -->
+    <string name="product_item">Item</string>
+
+    <!-- Label for product's item content description [CHAR LIMIT=30] -->
+    <string name="product_location">Location</string>
+
+
+    <!-- Label for supplier category of attributes in the editor [CHAR LIMIT=30] -->
+    <string name="category_supplier">Supplier</string>
+
+    <!-- Label for Order Product of attributes in the nave  [CHAR LIMIT=30] -->
+    <string name="order_product">Order</string>
+
+    <!-- Label for price information in the editor [CHAR LIMIT=30] -->
+    <string name="category_unit_price">Unit Price</string>
+
+    <!-- Label for currency of the product's unit price (EURO) [CHAR LIMIT=5] -->
+    <string name="currency_product_unit_price">ETB&#160;</string>
+
+    <!-- Label for stock information in the editor [CHAR LIMIT=30] -->
+    <string name="category_stock">Stock</string>
+
+    <!--
+    *
+    * EDIT TEXT HINTS
+    *
+    *-->
+
+    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_product_name">Product Name</string>
+
+    <!-- Text hint for Product description field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_product_description">Product Description</string>
+
+    <!-- Text hint for supplier name field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_product_code">product Code</string>
+
+    <!-- Text hint for supplier name field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_product_category">product category</string>
+
+    <!-- Text hint for supplier name field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_product_item">Product Item</string>
+
+    <!-- Text hint for supplier name field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_product_supplier_name">Supplier Name</string>
+
+
+    <!-- Text hint for supplier email address field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_product_supplier_email">Supplier Email</string>
+
+    <!-- Text hint for the unit price field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_product_unit_price">Unit Price</string>
+
+    <!-- Text hint for the quantity field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_product_quantity">Quantity</string>
+
+    <!--
+    *
+    * ORDER EMAIL TEXT PARTS
+    *
+    *-->
+
+    <!-- Text for subject prefix [CHAR LIMIT=50] -->
+    <string name="email_subject_prefix">New order for :&#160;</string>
+
+    <!-- Text for starting greetings [CHAR LIMIT=NONE] -->
+    <string name="order_email_starting_greeting">Dear&#160;</string>
+
+    <!-- Text for part one of current stock statement [CHAR LIMIT=NONE] -->
+    <string name="order_email_current_stock_statement_part_one">Our current stock level for the product&#160;</string>
+
+    <!-- Text for part two of current stock statement [CHAR LIMIT=NONE] -->
+    <string name="order_email_current_stock_statement_part_two">&#160;is :&#160;</string>
+
+    <!-- Text for email request and end greetings [CHAR LIMIT=NONE] -->
+    <string name="order_email_request_end_greetings">We would like to order new units of this product to increase our stock.\n\n
+    Could you please get back to as soon as possible to discuss this order in further details.\n\nBest regards,\n\nYour Client</string>
+
+    <!-- Line jump [CHAR LIMIT=N/A] -->
+    <string name="order_email_jump_line">\n\n</string>
+
+    <!-- Comma [CHAR LIMIT=N/A] -->
+    <string name="order_email_comma">,</string>
+
+    <!-- Point [CHAR LIMIT=N/A] -->
+    <string name="order_email_point">.</string>
+
+    <!--
+    *
+    * DIALOG MESSAGES
+    *
+    *-->
+
+    <!-- Dialog message when user is leaving editor but hasn't saved changes [CHAR LIMIT=NONE] -->
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+
+    <!-- Dialog button text for the option to discard a user's changes [CHAR LIMIT=20] -->
+    <string name="discard">Discard</string>
+
+    <!-- Dialog button text for the option to keep editing the current product [CHAR LIMIT=20] -->
+    <string name="keep_editing">Keep Editing</string>
+
+    <!-- Dialog message to ask the user to confirm deleting the current product [CHAR LIMIT=NONE] -->
+    <string name="delete_dialog_msg">Delete this product?</string>
+
+    <!-- Dialog message to ask the user to confirm deleting all products [CHAR LIMIT=NONE] -->
+    <string name="delete_all_products_dialog_msg">Delete all products?</string>
+
+    <!-- Dialog button text for the option to confirm deleting the current product [CHAR LIMIT=20] -->
+    <string name="delete">Delete</string>
+
+    <!-- Dialog button text for the option to cancel deletion of the current product [CHAR LIMIT=20] -->
+    <string name="cancel">Cancel</string>
+
+    <!--
+    *
+    * NOTIFICATION TOAST MESSAGES
+    *
+    *-->
+
+    <!-- Toast message in editor when new product has been successfully inserted [CHAR LIMIT=NONE] -->
+    <string name="editor_insert_product_successful">Product saved</string>
+
+    <!-- Toast message in editor when current product was successfully updated [CHAR LIMIT=NONE] -->
+    <string name="editor_update_product_successful">Product updated</string>
+
+    <!-- Toast message in editor when current product was successfully deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_product_successful">Product deleted</string>
+
+    <!-- Toast message in catalog when a unit sale of given product has successfully been sold [CHAR LIMIT=NONE] -->
+    <string name="catalog_sell_product_item_successful">One unit has been sold</string>
+
+    <!-- Toast message in catalog when all products were successfully deleted [CHAR LIMIT=NONE] -->
+    <string name="catalog_delete_all_products_successful">All products deleted</string>
+
+    <!-- Toast message in catalog when users tries to delete all products from an empty products table [CHAR LIMIT=NONE] -->
+    <string name="catalog_products_table_is_empty">The products database is empty !</string>
+
+    <!--
+    *
+    * ERROR TOAST MESSAGES
+    *
+    *-->
+
+    <!-- Toast message in editor when attempt to save a product without a name [CHAR LIMIT=NONE] -->
+    <string name="editor_product_requires_name">Product requires a name !</string>
+
+    <!-- Toast message in editor when attempt to save a product without a supplier name [CHAR LIMIT=NONE] -->
+    <string name="editor_product_requires_supplier_name">Product requires a supplier name !</string>
+
+    <!-- Toast message in editor when attempt to save a product without a supplier email address [CHAR LIMIT=NONE] -->
+    <string name="editor_product_requires_supplier_email">Product requires a supplier\'s email address !</string>
+
+    <!-- Toast message in editor when attempt to save a product with an invalid supplier email address [CHAR LIMIT=NONE] -->
+    <string name="editor_product_invalid_supplier_email">The supplier\'s email address is not valid !</string>
+
+    <!-- Toast message in editor when attempt to save a product without a unit price [CHAR LIMIT=NONE] -->
+    <string name="editor_product_requires_price">Product requires a price !</string>
+
+    <!-- Toast message in editor when attempt to save a product without a supplier email address [CHAR LIMIT=NONE] -->
+    <string name="editor_product_requires_positive_price">Product requires a positive price !</string>
+
+    <!-- Toast message in editor when attempt to save a product with an empty stock level [CHAR LIMIT=NONE] -->
+    <string name="editor_product_requires_positive_stock_level">Product requires a positive stock level !</string>
+
+    <!-- Toast message in editor when attempt to save a product without an image [CHAR LIMIT=NONE] -->
+    <string name="editor_product_requires_image">Product requires an image !</string>
+
+    <!-- Toast message in editor when new product has failed to be inserted [CHAR LIMIT=NONE] -->
+    <string name="editor_insert_product_failed">Error with saving product</string>
+
+    <!-- Toast message in editor when current product has failed to be updated [CHAR LIMIT=NONE] -->
+    <string name="editor_update_product_failed">Error with updating product</string>
+
+    <!-- Toast message in catalog when unit sell of a product has failed [CHAR LIMIT=NONE] -->
+    <string name="catalog_sell_product_item_failed">Error with selling product\'s item</string>
+
+    <!-- Toast message in catalog when unit sell of a product has failed because stock is null [CHAR LIMIT=NONE] -->
+    <string name="catalog_sell_product_item_failed_stock_empty">Stock for this product is empty !</string>
+
+    <!-- Toast message in editor when current product has failed to be deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_product_failed">Error with deleting product</string>
+
+    <!-- Toast message in editor when attempt to delete all product from database has failed [CHAR LIMIT=NONE] -->
+    <string name="catalog_delete_all_products_failed">Error with deleting the products</string>
+    <string name="title_activity_login">Sign in</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="title_activity_category">CategoryActivity</string>
+    <string name="title_activity_item">ItemActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">uba.uba@inventory.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

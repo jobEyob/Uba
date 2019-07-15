@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Home" />
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_pro_list"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/catalog_activity_title_product_list" />
+        <item
+            android:id="@+id/nav_add_product"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/editor_activity_title_new_product" />
+        <item
+            android:id="@+id/nav_category"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Product Category" />
+        <item
+            android:id="@+id/nav_item"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Product Item" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_supplier"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/category_supplier" />
+            <item
+                android:id="@+id/nav_order"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/order_product" />
+
+        </menu>
+    </item>
+    <item android:title="Statistics">
+        <menu>
+            <item
+                android:id="@+id/nav_statistics"
+                android:icon="@drawable/ic_sync_black_24dp"
+                android:title="Statistics" />
+            <item
+                android:id="@+id/nav_export"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Export data" />
+        </menu>
+    </item>
+    <item android:title="Users">
+        <menu>
+            <item
+                android:id="@+id/nav_add_user"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="Add users to this account" />
+            <item
+                android:id="@+id/nav_manage_user"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Manage users" />
+        </menu>
+    </item>
+
+</menu>
