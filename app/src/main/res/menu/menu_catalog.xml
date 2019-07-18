@@ -4,11 +4,6 @@
     tools:context="com.ezyro.uba_inventory.CatalogActivity">
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_insert_dummy_data"
         android:orderInCategory="100"
         android:title="@string/action_insert_dummy_data"

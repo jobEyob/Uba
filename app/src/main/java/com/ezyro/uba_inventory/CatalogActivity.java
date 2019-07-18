@@ -49,18 +49,16 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-       // Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-
-                // Your code
-                finish();
-            }
-        });
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View view) {
+//                // Your code
+//                finish();
+//            }
+//        });
+        DrawerUtil.getDrawer(this,toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -152,11 +150,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id){
-            case R.id.action_settings:
-                Intent intent = new Intent(getBaseContext(),SettingsActivity.class);
-
-                startActivity(intent);
-                return true;
             // Respond to a click on the "Insert dummy data" menu option.
             case R.id.action_insert_dummy_data:
 

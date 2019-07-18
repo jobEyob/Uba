@@ -1,6 +1,8 @@
 package com.ezyro.uba_inventory;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +18,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener {
@@ -76,9 +81,31 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+
+            case R.id.action_settings:
+
+                //Toasty.warning(getBaseContext(), "Sorry for know this not function", Toast.LENGTH_SHORT, true).show();
+                Intent sintent = new Intent(this, SettingsActivity.class);
+                startActivity(sintent);
+
+                return true;
+            case R.id.action_about:
+
+                Toasty.warning(getBaseContext(), "Sorry for know this not function", Toast.LENGTH_SHORT, true).show();
+
+                return true;
+            // Respond to a click on the "Delete all entries" menu option.
+            case R.id.action_Logout:
+                Intent intent = new Intent(this, LoginActivity.class);
+                SharedPreferences pref = getSharedPreferences("user_details",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.clear();
+                startActivity(intent);
+
+                return true;
+            case R.id.action_exit:
+                finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -132,7 +159,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_supplier) {
-
+            Intent intent = new Intent(this, SupplierActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_order) {
 
         }else if (id == R.id.nav_statistics) {

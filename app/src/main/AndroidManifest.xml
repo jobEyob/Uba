@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".CatalogActivity"
-            android:label="@string/catalog_activity_title_product_list"
+            android:label="@string/nave_activity_title_product_list"
             android:theme="@style/AppTheme.NoActionBar">
 
             <!-- <intent-filter> -->
@@ -34,15 +34,11 @@
         </activity>
         <activity
             android:name=".EditorActivity"
-            android:parentActivityName=".CatalogActivity"
-            android:theme="@style/EditorTheme">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CatalogActivity" />
+
         </activity>
 
         <provider
@@ -88,25 +84,19 @@
         <activity
             android:name=".CategoryActivity"
             android:label="@string/title_activity_category"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ezyro.uba_inventory.MainActivity" />
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ItemActivity"
             android:label="@string/title_activity_item"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ezyro.uba_inventory.MainActivity" />
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/NavAppTheme.NoActionBar" />
+        <activity
+            android:name=".SupplierActivity"
+            android:label="@string/title_activity_supplier"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

@@ -30,8 +30,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,12 +49,9 @@ import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.DexterError;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -123,6 +120,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
+
         mPictureImageView = (ImageView) findViewById(R.id.image_product);
         mNameEditText = (EditText) findViewById(R.id.edit_product_name);
         mProductCategory =(Spinner) findViewById(R.id.Spinner_product_category);
@@ -136,18 +134,27 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         ImageView mDecrementStock = (ImageView) findViewById(R.id.decrement_stock);
         ImageView mIncrementStock = (ImageView) findViewById(R.id.increment_stock);
 
+   //  Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
         // Examine the intent that was used to launch this activity.
         Intent intent = getIntent();
         mCurrentProductUri = intent.getData();
 
         if (mCurrentProductUri == null) {
-            setTitle(getString(R.string.editor_activity_title_new_product));
+            toolbar.setTitle(getString(R.string.editor_activity_and_nave_title_add_product));
+            setSupportActionBar(toolbar);
+            DrawerUtil.getDrawer(this,toolbar); // call DDrawerUtil class that implement navigationdrawer library
             invalidateOptionsMenu();
             productQuantity = 0;
             mProductQuantityTextView.setText(String.valueOf(productQuantity));
             mOrderNowImageView.setVisibility(View.GONE);
         } else {
-            setTitle(getString(R.string.editor_activity_title_edit_product));
+            toolbar.setTitle(getString(R.string.editor_activity_title_edit_product));
+            setSupportActionBar(toolbar);
+            DrawerUtil.getDrawer(this,toolbar); // call DDrawerUtil class that implement navigationdrawer library
+
             getSupportLoaderManager().initLoader(EXISTING_PRODUCT_LOADER, null, this);
         }
 

@@ -5,26 +5,26 @@
 
     <item
         android:id="@+id/nav_home"
-        android:icon="@drawable/ic_menu_camera"
-        android:title="Home" />
+        android:icon="@drawable/ic_home"
+        android:title="@string/nave_activity_title_Home" />
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_pro_list"
             android:icon="@drawable/ic_menu_camera"
-            android:title="@string/catalog_activity_title_product_list" />
+            android:title="@string/nave_activity_title_product_list" />
         <item
             android:id="@+id/nav_add_product"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/editor_activity_title_new_product" />
+            android:title="@string/editor_activity_and_nave_title_add_product" />
         <item
             android:id="@+id/nav_category"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Product Category" />
+            android:title="@string/nave_activity_title_product_category" />
         <item
             android:id="@+id/nav_item"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Product Item" />
+            android:title="@string/nave_activity_title_product_item" />
     </group>
 
     <item android:title="Communicate">
@@ -32,36 +32,36 @@
             <item
                 android:id="@+id/nav_supplier"
                 android:icon="@drawable/ic_menu_send"
-                android:title="@string/category_supplier" />
+                android:title="@string/nave_supplier" />
             <item
                 android:id="@+id/nav_order"
                 android:icon="@drawable/ic_menu_send"
-                android:title="@string/order_product" />
+                android:title="@string/nave_order_product" />
 
         </menu>
     </item>
-    <item android:title="Statistics">
+    <item android:title="Report">
         <menu>
             <item
                 android:id="@+id/nav_statistics"
                 android:icon="@drawable/ic_sync_black_24dp"
-                android:title="Statistics" />
+                android:title="@string/nave_statistics" />
             <item
                 android:id="@+id/nav_export"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Export data" />
+                android:title="@string/nave_export_data" />
         </menu>
     </item>
-    <item android:title="Users">
+    <item android:title="@string/users">
         <menu>
             <item
                 android:id="@+id/nav_add_user"
                 android:icon="@drawable/ic_menu_camera"
-                android:title="Add users to this account" />
+                android:title="@string/nave_add_users" />
             <item
                 android:id="@+id/nav_manage_user"
                 android:icon="@drawable/ic_menu_manage"
-                android:title="Manage users" />
+                android:title="@string/nave_manage_users" />
         </menu>
     </item>
 

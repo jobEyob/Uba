@@ -3,13 +3,47 @@
     <string name="action_settings">Settings</string>
 
     <!-- Title for the activity to add a new product [CHAR LIMIT=20] -->
-    <string name="editor_activity_title_new_product">Add a Product</string>
+    <string name="editor_activity_and_nave_title_add_product">Add a Product</string>
 
     <!-- Title for the activity to edit an existing product [CHAR LIMIT=20] -->
     <string name="editor_activity_title_edit_product">Edit Product</string>
+    <!-- Title for the nave menu  [CHAR LIMIT=20] -->
+    <string name="users">Users</string>
+
+    <!--
+   *
+   * side nave TEXTS
+   *
+   *-->
+    <!-- Title for the activity to edit an existing product [CHAR LIMIT=20] -->
+    <string name="nave_activity_title_Home">Home</string>
 
     <!-- Title for the activity to edit an existing product [CHAR LIMIT=20] -->
-    <string name="catalog_activity_title_product_list">Product List</string>
+    <string name="nave_activity_title_product_list">Product List</string>
+
+ <!-- Title for the activity to edit an existing product [CHAR LIMIT=20] -->
+    <string name="nave_activity_title_product_category">Products Category</string>
+
+<!-- Title for the activity to edit an existing product [CHAR LIMIT=20] -->
+    <string name="nave_activity_title_product_item">Products Item</string>
+
+    <!-- Label for supplier category of attributes in the editor [CHAR LIMIT=30] -->
+    <string name="nave_supplier">Suppliers</string>
+
+    <!-- Label for Order Product of attributes in the nave  [CHAR LIMIT=30] -->
+    <string name="nave_order_product">Orders</string>
+
+    <!-- Title for the activity to edit an existing product [CHAR LIMIT=20] -->
+    <string name="nave_statistics">Statistics</string>
+
+    <!-- Title for the activity to edit an existing product [CHAR LIMIT=20] -->
+    <string name="nave_export_data">Export data</string>
+
+    <!-- Title for the nave menu [CHAR LIMIT=20] -->
+    <string name="nave_add_users">Add users to this account</string>
+
+    <!-- Title for the nave menu [CHAR LIMIT=20] -->
+    <string name="nave_manage_users">Manage users</string>
 
 
     <!--
@@ -83,13 +117,6 @@
 
     <!-- Label for product's item content description [CHAR LIMIT=30] -->
     <string name="product_location">Location</string>
-
-
-    <!-- Label for supplier category of attributes in the editor [CHAR LIMIT=30] -->
-    <string name="category_supplier">Supplier</string>
-
-    <!-- Label for Order Product of attributes in the nave  [CHAR LIMIT=30] -->
-    <string name="order_product">Order</string>
 
     <!-- Label for price information in the editor [CHAR LIMIT=30] -->
     <string name="category_unit_price">Unit Price</string>
@@ -360,4 +387,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_supplier">SupplierActivity</string>
+
+
 </resources>
