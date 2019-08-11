@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.ezyro.uba_inventory.data.ProductContract.ProductEntry;
 
+import es.dmoral.toasty.Toasty;
+
 class ProductCursorAdapter extends CursorAdapter {
     /** Tag for the log messages */
     public static final String LOG_TAG = ProductCursorAdapter.class.getSimpleName();
@@ -39,7 +41,7 @@ class ProductCursorAdapter extends CursorAdapter {
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
+        return LayoutInflater.from(context).inflate(R.layout.list_product, parent, false);
     }
 
     /**
@@ -61,6 +63,7 @@ class ProductCursorAdapter extends CursorAdapter {
         TextView unitPriceTextView = (TextView) view.findViewById(R.id.unit_price_value);
         TextView quantityTextView = (TextView) view.findViewById(R.id.stock_level_value);
         ImageView sellNowButtonImageView = (ImageView) view.findViewById(R.id.sell_button);
+        ImageView imageViewStatus = (ImageView) view.findViewById(R.id.imageViewStatus);
 
         // Set a TAG on the sell button with current position of cursor
         sellNowButtonImageView.setTag(position);
@@ -69,11 +72,14 @@ class ProductCursorAdapter extends CursorAdapter {
         int nameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
         int unitPriceColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_UNIT_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
+        int statusColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_STATUS);
 
         // Read the product attributes from the Cursor for the current product
         String productName = cursor.getString(nameColumnIndex);
         int productUnitPrice = cursor.getInt(unitPriceColumnIndex);
         int productQuantity = cursor.getInt(quantityColumnIndex);
+        int productStatus = cursor.getInt(statusColumnIndex);
+
 
         // Update the TextViews with the attributes for the current product
         nameTextView.setText(productName);
@@ -87,6 +93,14 @@ class ProductCursorAdapter extends CursorAdapter {
         else {
             quantityTextView.setTextColor(ContextCompat.getColor(context, R.color.colorPositiveStock));
         }
+
+        //if the synced status is 0 displaying
+        //queued icon
+        //else displaying synced icon
+        if (productStatus == 0) {
+            imageViewStatus.setBackgroundResource(R.drawable.ic_unsynch);
+        }else {
+            imageViewStatus.setBackgroundResource(R.drawable.ic_success); }
 
         sellNowButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +124,7 @@ class ProductCursorAdapter extends CursorAdapter {
                 else {
                     // Otherwise, show a toast message saying that the sell action is not possible
                     // as the stock level has reached 0.
-                    Toast.makeText(context, context.getString(R.string.catalog_sell_product_item_failed_stock_empty),
+                    Toasty.warning(context, context.getString(R.string.catalog_sell_product_item_failed_stock_empty),
                             Toast.LENGTH_SHORT).show();
                 }
 

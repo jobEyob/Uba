@@ -1,11 +1,15 @@
 package com.ezyro.uba_inventory;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -35,6 +39,12 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     /** Instance of CursorAdapter */
     ProductCursorAdapter mCursorAdapter;
+
+    //a broadcast to know weather the data is synced or not
+    public static final String DATA_SAVED_BROADCAST = "com.ezyro.uba_inventory.datasaved";
+
+    //Broadcast receiver to know the sync status
+    private final BroadcastReceiver broadcastReceiver = new NetworkStateChecker();
 
    // private boolean mProductHasChanged = false;
 
@@ -96,10 +106,50 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             }
         });
 
-        // Kick-off the loader.
+        // Kick-off the loader. for gat product list
         getSupportLoaderManager().initLoader(PRODUCT_LOADER, null, this);
 
+        //the broadcast receiver to update sync status
+//        /broadcastReceiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//
+//                //loading the product again
+//              //  getSupportLoaderManager().initLoader(PRODUCT_LOADER, null, this);
+//                restartActivity(CatalogActivity.this);
+//            }
+//        };
+//
+//        //registering the broadcast receiver to update sync status
+//        registerReceiver(broadcastReceiver, new IntentFilter(DATA_SAVED_BROADCAST));
 
+
+    }
+
+
+    public static void restartActivity(AppCompatActivity activity){
+        if (Build.VERSION.SDK_INT >= 16) {
+            activity.recreate();
+        } else {
+            activity.finish();
+            activity.startActivity(activity.getIntent());
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(broadcastReceiver,filter);
+
+        //restartActivity(CatalogActivity.this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
     }
 
     /**
@@ -113,12 +163,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
         // Create a ContentValues objecURI
         ContentValues values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "A3");
+        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "ford");
         values.put(ProductEntry.COLUMN_PRODUCT_UNIT_PRICE, 25000);
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, 1);
         values.put(ProductEntry.COLUMN_PRODUCT_IMAGE_PATH, String.valueOf(imageforDummyProductURI));
-        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, "Audi");
-        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, "orders@audi.com");
+        values.put(ProductEntry.COLUMN_PRODUCT_CATEGORY_NAME,"Car");
+        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_ID,1);
+    //        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, "Audi");
+    //        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, "orders@audi.com");
 
         Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
 
@@ -181,6 +233,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,
                 ProductEntry.COLUMN_PRODUCT_UNIT_PRICE,
+                ProductEntry.COLUMN_STATUS,
                 ProductEntry.COLUMN_PRODUCT_QUANTITY};
         return new CursorLoader(this,   // Parent's activity context
                 ProductEntry.CONTENT_URI,   // Provider content URI to query

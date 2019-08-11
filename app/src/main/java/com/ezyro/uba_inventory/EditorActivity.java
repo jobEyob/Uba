@@ -1,20 +1,12 @@
 package com.ezyro.uba_inventory;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.Context;
-import android.media.MediaScannerConnection;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.Settings;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,14 +14,23 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -39,12 +40,21 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.ezyro.uba_inventory.data.ProductContract.CategoryEntry;
 import com.ezyro.uba_inventory.data.ProductContract.ProductEntry;
+import com.ezyro.uba_inventory.data.ProductContract.SupplierEntry;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -52,6 +62,11 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -61,7 +76,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import es.dmoral.toasty.Toasty;
 
 /**
  * Allows the user to create a new product or edit an existing one.
@@ -80,22 +99,41 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private static int PICK_IMAGE_Camera_REQUEST = 2;
     private static final String IMAGE_DIRECTORY = "/ubaInventor";
 
+     // private static String url_all_products = "http://192.168.1.2:8080/product";
+    // url to create new product
+        //private static String url_all_products = "http://192.168.1.3:8080/product";
+
+    //1 means data is synced and 0 means data is not synced
+    public static final int STATUS_SYNCED_WITH_SERVER = 1;
+    public static final int STATUS_NOT_SYNCED_WITH_SERVER = 0;
+
+    // Progress Dialog
+    private ProgressDialog pDialog;
+    JSONParser jsonParser = new JSONParser();
+    // JSON Node names
+    private static final String TAG_SUCCESS = "success";
 
     /** Global variables declaration */
     private Uri selectedImageUri = null;
     private Uri mCurrentProductUri;
 
     private String productName;
+    private String supplierId;
     private String supplierName;
     private String supplierEmail;
+    private String supplierPhone;
     private int productQuantity;
+    private String categoryName;
+    private String categoryId;
 
     private ImageView mPictureImageView;
     private EditText mNameEditText;
     private Spinner mProductCategory;
-    private EditText mProductItem;
-    private EditText mSupplierNameEditText;
-    private EditText mSupplierEmailAddressEditText;
+    private Spinner mProductSupplier;
+    private Spinner mProductItem;
+    private Button  mSaveProduct;
+//    private EditText mSupplierNameEditText;
+//    private EditText mSupplierEmailAddressEditText;
     private EditText mUnitPriceEditText;
     private TextView mProductQuantityTextView;
 
@@ -124,15 +162,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPictureImageView = (ImageView) findViewById(R.id.image_product);
         mNameEditText = (EditText) findViewById(R.id.edit_product_name);
         mProductCategory =(Spinner) findViewById(R.id.Spinner_product_category);
-        mProductItem =(EditText) findViewById(R.id.edit_product_item);
-        mSupplierNameEditText = (EditText) findViewById(R.id.edit_product_supplier_name);
-        mSupplierEmailAddressEditText = (EditText) findViewById(R.id.edit_product_supplier_email);
+        mProductSupplier =(Spinner) findViewById(R.id.Spinner_product_supplier);
+        mProductItem =(Spinner) findViewById(R.id.edit_product_item);
+            //        mSupplierNameEditText = (EditText) findViewById(R.id.edit_product_supplier_name);
+            //        mSupplierEmailAddressEditText = (EditText) findViewById(R.id.edit_product_supplier_email);
         mUnitPriceEditText = (EditText) findViewById(R.id.edit_product_unit_price);
         mProductQuantityTextView = (TextView) findViewById(R.id.product_quantity_text_view);
 
         ImageView mOrderNowImageView = (ImageView) findViewById(R.id.order_now);
         ImageView mDecrementStock = (ImageView) findViewById(R.id.decrement_stock);
         ImageView mIncrementStock = (ImageView) findViewById(R.id.increment_stock);
+
+        mSaveProduct = (Button) findViewById(R.id.but_save_product);
 
    //  Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -150,20 +191,28 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             productQuantity = 0;
             mProductQuantityTextView.setText(String.valueOf(productQuantity));
             mOrderNowImageView.setVisibility(View.GONE);
+
+            // Loading spinner data from database
+            loadSpinnerData("add");
+            loadSupplierSpinner("add",null);
         } else {
             toolbar.setTitle(getString(R.string.editor_activity_title_edit_product));
             setSupportActionBar(toolbar);
             DrawerUtil.getDrawer(this,toolbar); // call DDrawerUtil class that implement navigationdrawer library
 
             getSupportLoaderManager().initLoader(EXISTING_PRODUCT_LOADER, null, this);
+
+            // Loading spinner data from database
+            loadSpinnerData("edit");
+            loadSupplierSpinner("edit",null);
         }
 
         // Setup OnTouchListeners on all the input fields,
         // to notify the user if he tries to leave the editor without saving.
         mPictureImageView.setOnTouchListener(mTouchListener);
         mNameEditText.setOnTouchListener(mTouchListener);
-        mSupplierNameEditText.setOnTouchListener(mTouchListener);
-        mSupplierEmailAddressEditText.setOnTouchListener(mTouchListener);
+                        //        mSupplierNameEditText.setOnTouchListener(mTouchListener);
+                        //        mSupplierEmailAddressEditText.setOnTouchListener(mTouchListener);
         mUnitPriceEditText.setOnTouchListener(mTouchListener);
         mDecrementStock.setOnTouchListener(mTouchListener);
         mIncrementStock.setOnTouchListener(mTouchListener);
@@ -201,27 +250,41 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mOrderNowImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[] {supplierEmail});
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject_prefix) + productName);
-                intent.putExtra(Intent.EXTRA_TEXT, createOrderEmailMessage());
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                }
+                showOrderDialog();
             }
         });
 
+       mSaveProduct.setOnClickListener(new View.OnClickListener() {
+           @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+           @Override
+           public void onClick(View v) {
+               saveToServer();
 
-
-        // Loading spinner data from database
-        loadSpinnerData();
-
-
+           }
+       });
 
 
     }
 
+    public void OrderbyPhone(){
+        //Intent intent = new Intent(Intent.ACTION_CALL);
+        Intent i = new Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse("tel:"+supplierPhone+" "));
+        startActivity(i);
+    }
+
+    public void OrderbyEmail(){
+
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[] {supplierEmail});
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject_prefix) + productName);
+
+        intent.putExtra(Intent.EXTRA_TEXT, createOrderEmailMessage());
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
     /**
      * This method creates a summary for the order email.
      */
@@ -280,7 +343,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             saveImage(thumbnail);
 
         }else {
-               Toast.makeText(EditorActivity.this, "You haven't picked Image", Toast.LENGTH_LONG).show();
+               Toasty.error(EditorActivity.this, "You haven't picked Image", Toast.LENGTH_LONG).show();
             }
     }
 
@@ -378,73 +441,96 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      * Get user input from editor and save new product into the database or update an existing one.
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void saveProduct() {
+    private void saveProduct(int Status) {
 
         String nameString = mNameEditText.getText().toString().trim();
-        String supplierNameString = mSupplierNameEditText.getText().toString().trim();
-        String supplierEmailString = mSupplierEmailAddressEditText.getText().toString().trim();
+        String categoryNameString = categoryName;
+        String supplierIdString = supplierId;
+//        String supplierNameString = mSupplierNameEditText.getText().toString().trim();
+//        String supplierEmailString = mSupplierEmailAddressEditText.getText().toString().trim();
         String unitPriceString = mUnitPriceEditText.getText().toString().trim();
 
         // Check if this is supposed to be a new product,
         // and check if all the fields in the editor are blank.
-        if (mCurrentProductUri == null && !imageProductHasChanged && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(supplierNameString) &&
-                TextUtils.isEmpty(supplierEmailString) && TextUtils.isEmpty(unitPriceString) && productQuantity ==0) {
+//        if (mCurrentProductUri == null && !imageProductHasChanged && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(supplierNameString) &&
+//                TextUtils.isEmpty(supplierEmailString) && TextUtils.isEmpty(unitPriceString) && productQuantity ==0) {
+//            return;
+//        }
+        if (mCurrentProductUri == null && !imageProductHasChanged && TextUtils.isEmpty(nameString)  && TextUtils.isEmpty(unitPriceString) && productQuantity ==0) {
             return;
         }
+
 
         // Create a ContentValues object where column names are the keys,
         // and product attributes from the editor are the values.
         ContentValues values = new ContentValues();
+
+        // Product status synced to server or not synced
+         values.put(ProductEntry.COLUMN_STATUS,Status);
 
         // Check that the product has a name.
         if (!nameString.isEmpty()) {
             values.put(ProductEntry.COLUMN_PRODUCT_NAME, nameString);
         }
         else {
-            Toast.makeText(this, getString(R.string.editor_product_requires_name),
+            Toasty.error(this, getString(R.string.editor_product_requires_name),
                     Toast.LENGTH_SHORT).show();
             productDataAreValid = false;
             return;
         }
+        if (!categoryNameString.isEmpty()){
+            values.put(ProductEntry.COLUMN_PRODUCT_CATEGORY_NAME,categoryNameString);
+        }
 
-        // Check that the name of the supplier of the product is provided.
-        if (!supplierNameString.isEmpty()) {
-            values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, supplierNameString);
+        // Check that the name but save id of the supplier of the product is provided.
+        if (!supplierIdString.isEmpty()) {
+            values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_ID, supplierId);
         }
         else {
-            Toast.makeText(this, getString(R.string.editor_product_requires_supplier_name),
+            Toasty.error(this, getString(R.string.editor_product_requires_supplier_name),
                     Toast.LENGTH_SHORT).show();
             productDataAreValid = false;
             return;
         }
+//        // Check that the name of the supplier of the product is provided.
+//        if (!supplierNameString.isEmpty()) {
+//            values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, supplierNameString);
+//        }
+//        else {
+//            Toasty.error(this, getString(R.string.editor_product_requires_supplier_name),
+//                    Toast.LENGTH_SHORT).show();
+//            productDataAreValid = false;
+//            return;
+//        }
 
-        // Check that the email of the supplier of the product has been provided.
-        if (!supplierNameString.isEmpty() && supplierEmailString.matches(EMAIL_PATTERN)) {
-            values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, supplierEmailString);
-        }
-        else if (supplierEmailString.isEmpty()) {
-            Toast.makeText(this, getString(R.string.editor_product_requires_supplier_email),
-                    Toast.LENGTH_SHORT).show();
-            productDataAreValid = false;
-            return;
-        } else if (!supplierEmailString.matches(EMAIL_PATTERN)) {
-            Toast.makeText(this, getString(R.string.editor_product_invalid_supplier_email),
-                    Toast.LENGTH_SHORT).show();
-            productDataAreValid = false;
-            return;
-        }
+
+//        // Check that the email of the supplier of the product has been provided.
+//        if (!supplierNameString.isEmpty() && supplierEmailString.matches(EMAIL_PATTERN)) {
+//            values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, supplierEmailString);
+//        }
+//        else if (supplierEmailString.isEmpty()) {
+//            Toasty.error(this, getString(R.string.editor_product_requires_supplier_email),
+//                    Toast.LENGTH_SHORT).show();
+//            productDataAreValid = false;
+//            return;
+//        } else if (!supplierEmailString.matches(EMAIL_PATTERN)) {
+//            Toasty.error(this, getString(R.string.editor_product_invalid_supplier_email),
+//                    Toast.LENGTH_SHORT).show();
+//            productDataAreValid = false;
+//            return;
+//        }
 
         // Check that the product has a valid unit price.
         if (!unitPriceString.isEmpty() && Integer.parseInt(unitPriceString) > 0) {
             values.put(ProductEntry.COLUMN_PRODUCT_UNIT_PRICE, unitPriceString);
         }
         else if (unitPriceString.length() == 0){
-            Toast.makeText(this, getString(R.string.editor_product_requires_price),
+            Toasty.error(this, getString(R.string.editor_product_requires_price),
                     Toast.LENGTH_SHORT).show();
             productDataAreValid = false;
             return;
         } else if (Integer.parseInt(unitPriceString) == 0) {
-            Toast.makeText(this, getString(R.string.editor_product_requires_positive_price),
+            Toasty.error(this, getString(R.string.editor_product_requires_positive_price),
                     Toast.LENGTH_SHORT).show();
             productDataAreValid = false;
             return;
@@ -455,7 +541,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, productQuantity);
         }
         else {
-            Toast.makeText(this, getString(R.string.editor_product_requires_positive_stock_level),
+            Toasty.error(this, getString(R.string.editor_product_requires_positive_stock_level),
                     Toast.LENGTH_SHORT).show();
             productDataAreValid = false;
             return;
@@ -467,7 +553,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             values.put(ProductEntry.COLUMN_PRODUCT_IMAGE_PATH, imageString);
         }
         else if (((BitmapDrawable)mPictureImageView.getDrawable()).getBitmap() == ((BitmapDrawable)getDrawable(R.drawable.img_generic)).getBitmap()){
-            Toast.makeText(this, getString(R.string.editor_product_requires_image),
+            Toasty.error(this, getString(R.string.editor_product_requires_image),
                     Toast.LENGTH_SHORT).show();
             productDataAreValid = false;
             return;
@@ -480,24 +566,193 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mCurrentProductUri == null) {
             Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
             if (newUri == null) {
-                Toast.makeText(this, getString(R.string.editor_insert_product_failed),
+                Toasty.error(this, getString(R.string.editor_insert_product_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.editor_insert_product_successful),
+                Toasty.success(this, getString(R.string.editor_insert_product_successful),
                         Toast.LENGTH_SHORT).show();
             }
         } else {
             int rowsAffected = getContentResolver().update(mCurrentProductUri, values, null, null);
             if (rowsAffected == 0) {
-                Toast.makeText(this, getString(R.string.editor_update_product_failed),
+                Toasty.error(this, getString(R.string.editor_update_product_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.editor_update_product_successful),
+                Toasty.success(this, getString(R.string.editor_update_product_successful),
                         Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    /*
+     * this method is saving the name to ther server
+     * */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void saveToServer() {
+        final ProgressDialog progressDialog = new ProgressDialog(EditorActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Severing Product...");
+        progressDialog.show();
+
+        //final String name = editTextName.getText().toString().trim();
+        final String nameString = mNameEditText.getText().toString().trim();
+        final String categoryNameString = categoryName;
+        final String supplierIdString = supplierId;
+        final String unitPriceString = mUnitPriceEditText.getText().toString().trim();
+        final String productQuantityString = String.valueOf(productQuantity);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ProductEntry.WEB_URL_PRODUCT,
+                new Response.Listener<String>() {
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+
+                        try {
+
+                            JSONObject obj = new JSONObject(response);
+
+                            int success = obj.getInt(TAG_SUCCESS);
+                            Log.d("Create Response", obj.toString());
+
+                            if (success == 1) {
+                                //if there is a success
+                                //storing the product to sqlite with status synced
+                               // saveNameToLocalStorage(name, NAME_SYNCED_WITH_SERVER);
+                                saveProduct(STATUS_SYNCED_WITH_SERVER);
+                                if (productDataAreValid) {
+                                    finish();
+                                }
+
+                            } else {
+                                //if there is some error
+                                //saving the name to sqlite with status unsynced
+                               // saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER);
+                                saveProduct(STATUS_NOT_SYNCED_WITH_SERVER);
+                                if (productDataAreValid) {
+                                    finish();
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        //on error storing the name to sqlite with status unsynced
+                        //saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER);
+                        saveProduct(STATUS_NOT_SYNCED_WITH_SERVER);
+                        if (productDataAreValid) {
+                            finish();
+                        }
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                //
+                params.put("name", nameString);
+                //params.put("catagory_id", categoryNameString);
+                params.put("suppliery_id", supplierIdString);
+                params.put("price", unitPriceString);
+               // params.put("pro_un_code", productQuantityString);
+                //params.put("location_id", productQuantityString);
+                params.put("quantity", productQuantityString);
+//                params.put("item_id", productQuantityString);
+//                params.put("camp_id", "2");
+//                params.put("image", "images/prodact.jpg");
+                return params;
+            }
+        };
+
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+//    /**
+//     * Background Async Task to Create new product
+//     * */
+//    class CreateNewProduct extends AsyncTask<String, String, String> {
+//        /**
+//         * Before starting background thread Show Progress Dialog
+//         */
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+////            pDialog = new ProgressDialog(EditorActivity.this);
+////            pDialog.setMessage("Creating Product..");
+////            pDialog.setIndeterminate(false);
+////            pDialog.setCancelable(true);
+////            pDialog.show();
+//
+//        }
+//
+//        /*** Creating product */
+//        protected String doInBackground(String... args) {
+//
+////            final String name = mNameEditText.getText().toString().trim();
+////            final String description = categoryName;
+////            final String price = mUnitPriceEditText.getText().toString().trim();
+//
+//            final String nameString = mNameEditText.getText().toString().trim();
+//            final String categoryNameString = categoryName;
+//            final String supplierIdString = supplierId;
+//            final String unitPriceString = mUnitPriceEditText.getText().toString().trim();
+//            final String productQuantityString = String.valueOf(productQuantity);
+//
+//            // Building Parameters
+//            List<NameValuePair> params = new ArrayList<NameValuePair>();
+//            params.add(new BasicNameValuePair("name", nameString));
+//
+////            params.add(new BasicNameValuePair("pro_code", supplierIdString));
+//            params.add(new BasicNameValuePair("price", unitPriceString));
+////            params.add(new BasicNameValuePair("catagory_id", categoryNameString));
+//            params.add(new BasicNameValuePair("suppliery_id", supplierIdString));
+////            params.add(new BasicNameValuePair("item_id", supplierIdString));
+////            params.add(new BasicNameValuePair("location_id", supplierIdString));
+////            params.add(new BasicNameValuePair("image", categoryNameString));
+//            params.add(new BasicNameValuePair("quantity", productQuantityString));
+////            params.add(new BasicNameValuePair("description", categoryNameString));
+////            params.add(new BasicNameValuePair("company_id", ""+2+""));
+//            // getting JSON Object
+//            // Note that create product url accepts POST method
+//            JSONObject json = jsonParser.makeHttpRequest(url_all_products,
+//                    "POST", params);
+//            // check log cat fro response
+//            Log.d("Create Response", json.toString());
+//            // check for success tag
+//            try {
+//                int success = json.getInt(TAG_SUCCESS);
+//                if (success == 1) {
+//                    // successfully created product
+////                    Intent i = new Intent(getApplicationContext(), AllProductsActivity.class);
+////                    startActivity(i);
+////                    // closing this screen
+////                    finish();
+//                    Toast.makeText(getApplicationContext(),"successfully saned product",Toast.LENGTH_LONG).show();
+//                } else {
+//                    // failed to create product
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        /**
+//         * After completing background task Dismiss the progress dialog
+//         **/
+//        protected void onPostExecute(String file_url) {
+//            // dismiss the dialog once done
+//          // pDialog.dismiss();
+//
+//
+//        }
+//    }
+
+/**************************************    */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_editor, menu);
@@ -519,10 +774,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                saveProduct();
-                if (productDataAreValid) {
-                    finish();
-                }
+               // saveProduct();
+                //saveToServer();
+               // new CreateNewProduct().execute();
+//                if (productDataAreValid) {
+//                    finish();
+//                }
                 return true;
             case R.id.action_delete:
                 showDeleteConfirmationDialog();
@@ -571,8 +828,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_IMAGE_PATH,
                 ProductEntry.COLUMN_PRODUCT_NAME,
-                ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME,
-                ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,
+                ProductEntry.COLUMN_PRODUCT_CATEGORY_NAME,
+                ProductEntry.COLUMN_PRODUCT_SUPPLIER_ID,
+//                ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME,
+//                ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,
                 ProductEntry.COLUMN_PRODUCT_UNIT_PRICE,
                 ProductEntry.COLUMN_PRODUCT_QUANTITY};
 
@@ -588,18 +847,23 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
+
         if (cursor.moveToFirst()) {
             int imageColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE_PATH);
             int nameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
-            int supplierNameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME);
-            int supplierEmailColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
+            int categoryNameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_CATEGORY_NAME);
+            int supplierIdColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_ID);
+//            int supplierNameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME);
+//            int supplierEmailColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
             int unitPriceColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_UNIT_PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
 
             String productImageURI = cursor.getString(imageColumnIndex);
             productName = cursor.getString(nameColumnIndex);
-            supplierName = cursor.getString(supplierNameColumnIndex);
-            supplierEmail = cursor.getString(supplierEmailColumnIndex);
+            categoryName = cursor.getString(categoryNameColumnIndex);
+            supplierId = cursor.getString(supplierIdColumnIndex);
+//            supplierName = cursor.getString(supplierNameColumnIndex);
+//            supplierEmail = cursor.getString(supplierEmailColumnIndex);
             int productUnitPrice = cursor.getInt(unitPriceColumnIndex);
             productQuantity = cursor.getInt(quantityColumnIndex);
 
@@ -625,8 +889,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
 
             mNameEditText.setText(productName);
-            mSupplierNameEditText.setText(supplierName);
-            mSupplierEmailAddressEditText.setText(supplierEmail);
+                        //            mSupplierNameEditText.setText(supplierName);
+                        //            mSupplierEmailAddressEditText.setText(supplierEmail);
             mUnitPriceEditText.setText(Integer.toString(productUnitPrice));
             mProductQuantityTextView.setText(Integer.toString(productQuantity));
 
@@ -640,6 +904,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             //cursor.close();
         }
       //  cursor.close();
+
+        loadSpinnerData("edit"); // we call again loadSpinnerData b/c to set value
+        loadSupplierSpinner("edit",""+supplierId+"");
     }
 
     @Override
@@ -647,8 +914,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // If the loader is invalidated, clear out all the data from the input fields.
         mPictureImageView.setImageBitmap(null);
         mNameEditText.setText("");
-        mSupplierNameEditText.setText("");
-        mSupplierEmailAddressEditText.setText("");
+                        //        mSupplierNameEditText.setText("");
+                        //        mSupplierEmailAddressEditText.setText("");
         mUnitPriceEditText.setText("");
         mProductQuantityTextView.setText("");
     }
@@ -707,42 +974,48 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 });
         pictureDialog.show();
     }
-    /**
-     * Getting all category
-     * returns list of category
-     * */
-    public List<String> getAllLabels(){
-        List<String> labels = new ArrayList<String>();
 
-        Cursor cursor = managedQuery(ProductEntry.CONTENT_URI,null,null,null,"name");
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                labels.add(cursor.getString(1));
-            } while (cursor.moveToNext());
-        }
-
-        // closing connection
-       // cursor.close();
-
-        // returning lables
-        return labels;
+/***************************
+     * show dialog for order product
+     * ******************* */
+    private void showOrderDialog(){
+        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
+        pictureDialog.setTitle("Select Action");
+        String[] pictureDialogItems = {
+                "Order by Phone",
+                "Order by Email" };
+        pictureDialog.setItems(pictureDialogItems,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                OrderbyPhone();
+                                break;
+                            case 1:
+                                OrderbyEmail();
+                                break;
+                        }
+                    }
+                });
+        pictureDialog.show();
     }
 
 
     /**
      * Function to load the spinner data from SQLite database
+     *
      * */
-    private void loadSpinnerData() {
+    private void loadSpinnerData(String action ) {
+
         // database handler
 
         // Spinner Drop down elements
-        List<String> lables = this.getAllLabels();
+        final List<ListClasses> lables = this.getAllCategory(action);
 
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, lables);
+        ArrayAdapter<ListClasses> dataAdapter = new ArrayAdapter<ListClasses>(this,
+                android.R.layout.simple_spinner_item, lables );
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -750,9 +1023,133 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // attaching data adapter to spinner
         mProductCategory.setPrompt("Select Product Category");
         mProductCategory.setAdapter(dataAdapter);
-        // Spinner click listener
-        mProductCategory.setOnItemSelectedListener(this);
+        mProductCategory.setSelection(0);
+        mProductCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                ListClasses cate = (ListClasses) parent.getSelectedItem();
+               // Toast.makeText(EditorActivity.this, "Category ID: "+cate.getId()+",  Category Name : "+cate.getName(), Toast.LENGTH_SHORT).show();
+                categoryName = cate.getName();
+                categoryId = cate.getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //Another interface callback
+            }
+        });
+
     }
+         /**
+          * Spinner Drop down for supplyer */
+    public void loadSupplierSpinner(String action,String ids){
+
+        // database handler
+
+        // Spinner Drop down elements
+        final List<ListClasses> suplist = this.getAllSupplier(action,ids);
+
+        // Creating adapter for spinner
+        ArrayAdapter<ListClasses> dataAdapter = new ArrayAdapter<ListClasses>(this,
+                android.R.layout.simple_spinner_item, suplist );
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        mProductSupplier.setPrompt("Select Product Category");
+        mProductSupplier.setAdapter(dataAdapter);
+        mProductSupplier.setSelection(0);
+        mProductSupplier.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                ListClasses cate = (ListClasses) parent.getSelectedItem();
+                //Toast.makeText(EditorActivity.this, "Supplier ID: "+cate.getId()+",  Supplier Name : "+cate.getName(), Toast.LENGTH_SHORT).show();
+                supplierId = cate.getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //Another interface callback
+            }
+        });
+    }
+
+    /**
+     * Getting all category
+     * returns list of category
+     * */
+    public  List<ListClasses> getAllCategory(String action){
+        List<ListClasses> labels = new ArrayList<>();
+
+        Cursor cursor = managedQuery(CategoryEntry.CONTENT_CATEGORY_URI, null, null, null, "" + CategoryEntry._ID + "");
+
+        if(action == "edit"){
+
+            labels.add(new ListClasses("0",""+categoryName+"")); // for update product
+        }else {
+            labels.add(new ListClasses("0","Select Category")); // for add product
+        }
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                labels.add(new ListClasses("" + cursor.getString(0) + "", cursor.getString(1) + "(" + cursor.getString(0) + ")"));
+            } while (cursor.moveToNext());
+        }
+
+        // returning category list
+        return labels;
+    }
+
+    /**
+     * Getting all supplier
+     * returns list of supplier
+     * */
+    public List<ListClasses> getAllSupplier(String action, String ids ){
+
+        List<ListClasses> supList = new ArrayList<>();
+                if(action == "edit"){
+                    /**
+                     * get supplier by id
+                     */
+            if (ids != null){
+                String selection = SupplierEntry._ID + "=?";
+                String[]  selectionArgs = new String[] { ids };
+                Cursor cursor = managedQuery(SupplierEntry.CONTENT_SUPPLIER_URI,null,selection,selectionArgs,null);
+                if (cursor.moveToFirst()) {
+                    do {
+                        int supplierNameColumnIndex = cursor.getColumnIndex(SupplierEntry.COLUMN_PRODUCT_SUPPLIER_NAME);
+                        int supplierEmailColumnIndex = cursor.getColumnIndex(SupplierEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
+                        int supplierPhoneColumnIndex = cursor.getColumnIndex(SupplierEntry.COLUMN_PRODUCT_SUPPLIER_PHONE);
+
+                        supplierName = cursor.getString(supplierNameColumnIndex);
+                        supplierEmail = cursor.getString(supplierEmailColumnIndex);
+                        supplierPhone = cursor.getString(supplierPhoneColumnIndex);
+
+                    } while (cursor.moveToNext());
+                }
+            }
+
+            supList.add(new ListClasses("0",""+supplierName+"")); // for update product supplier
+        }else {
+            supList.add(new ListClasses("0","Select Supplier")); // for add product supplier
+        }
+
+        Cursor cursor = managedQuery(SupplierEntry.CONTENT_SUPPLIER_URI,null,null,null,"supplier_name");
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                supList.add(new ListClasses("" + cursor.getString(0) + "", cursor.getString(1) + "(" + cursor.getString(4) + ")"));
+
+            } while (cursor.moveToNext());
+        }
+
+        return supList;
+    }
+
     /**
      * 
      * Perform the deletion of the product in the database.
@@ -761,10 +1158,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mCurrentProductUri != null) {
             int rowsDeleted = getContentResolver().delete(mCurrentProductUri, null, null);
             if (rowsDeleted == 0) {
-                Toast.makeText(this, getString(R.string.editor_delete_product_failed),
+                Toasty.error(this, getString(R.string.editor_delete_product_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.editor_delete_product_successful),
+                Toasty.success(this, getString(R.string.editor_delete_product_successful),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -781,37 +1178,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     }
 
-//    /**
-//     * Requesting camera permission
-//     * This uses single permission model from dexter
-//     * Once the permission granted, opens the camera
-//     * On permanent denial opens settings dialog
-//     */
-//    private void requestCameraPermission() {
-//        Dexter.withActivity(this)
-//                .withPermission(
-//                        Manifest.permission.CAMERA)
-//                .withListener(new PermissionListener() {
-//                    @Override
-//                    public void onPermissionGranted(PermissionGrantedResponse response) {
-//                        // permission is granted
-//                        takePhotoFromCamera();
-//                    }
-//
-//                    @Override
-//                    public void onPermissionDenied(PermissionDeniedResponse response) {
-//                        // check for permanent denial of permission
-//                        if (response.isPermanentlyDenied()) {
-//                            showSettingsDialog();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-//                        token.continuePermissionRequest();
-//                    }
-//                }).check();
-//    }
 
     private void requestStorageAndCameraPermission() {
         Dexter.withActivity(this)
@@ -843,7 +1209,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 withErrorListener(new PermissionRequestErrorListener() {
                     @Override
                     public void onError(DexterError error) {
-                        Toast.makeText(getApplicationContext(), "Error occurred! ", Toast.LENGTH_SHORT).show();
+                        Toasty.error(getApplicationContext(), "Error occurred! ", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .onSameThread()

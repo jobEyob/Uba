@@ -11,19 +11,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_pro_list"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_product_list"
             android:title="@string/nave_activity_title_product_list" />
         <item
             android:id="@+id/nav_add_product"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_add_product"
             android:title="@string/editor_activity_and_nave_title_add_product" />
         <item
             android:id="@+id/nav_category"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_category"
             android:title="@string/nave_activity_title_product_category" />
         <item
             android:id="@+id/nav_item"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_list"
             android:title="@string/nave_activity_title_product_item" />
     </group>
 
@@ -31,11 +31,11 @@
         <menu>
             <item
                 android:id="@+id/nav_supplier"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_supplier"
                 android:title="@string/nave_supplier" />
             <item
                 android:id="@+id/nav_order"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_orders"
                 android:title="@string/nave_order_product" />
 
         </menu>
@@ -44,11 +44,11 @@
         <menu>
             <item
                 android:id="@+id/nav_statistics"
-                android:icon="@drawable/ic_sync_black_24dp"
+                android:icon="@drawable/ic_statistc"
                 android:title="@string/nave_statistics" />
             <item
                 android:id="@+id/nav_export"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_export"
                 android:title="@string/nave_export_data" />
         </menu>
     </item>
@@ -56,11 +56,11 @@
         <menu>
             <item
                 android:id="@+id/nav_add_user"
-                android:icon="@drawable/ic_menu_camera"
+                android:icon="@drawable/ic_add_user"
                 android:title="@string/nave_add_users" />
             <item
                 android:id="@+id/nav_manage_user"
-                android:icon="@drawable/ic_menu_manage"
+                android:icon="@drawable/ic_manege_user"
                 android:title="@string/nave_manage_users" />
         </menu>
     </item>

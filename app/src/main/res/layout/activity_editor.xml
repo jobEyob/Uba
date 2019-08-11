@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Layout for the editor -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
 
-    android:fillViewport="true">
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -29,6 +24,14 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:fillViewport="true">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -78,8 +81,6 @@
 
         </LinearLayout>
     </LinearLayout>
-
-
 
     <!-- product code -->
     <LinearLayout
@@ -218,82 +219,128 @@
             android:paddingLeft="4dp">
 
 
-            <!-- product item 's Name field -->
-            <EditText
+            <!--&lt;!&ndash; product item 's Name field &ndash;&gt;-->
+            <!--<EditText-->
+                <!--android:id="@+id/edit_product_item"-->
+                <!--android:hint="@string/hint_product_item"-->
+                <!--android:inputType="textCapWords"-->
+                <!--style="@style/EditorFieldStyle" />-->
+            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                 android:id="@+id/edit_product_item"
-                android:hint="@string/hint_product_item"
-                android:inputType="textCapWords"
-                style="@style/EditorFieldStyle" />
+                style="@style/EditorFieldStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dip"
+                android:layout_marginTop="20dip"
+                android:layout_marginRight="8dip"
+                android:prompt="@string/hint_product_item"
+                android:spinnerMode="dialog" />
 
 
         </LinearLayout>
     </LinearLayout>
 
-     <!-- Email category -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal">
-
-        <!-- Label -->
-        <TextView
-            android:text="@string/hint_product_supplier_email"
-            style="@style/CategoryStyle" />
-
-        <!-- Input fields -->
+        <!-- product Supplier -->
         <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="3"
-            android:paddingStart="4dp"
-            android:orientation="vertical"
-            android:paddingLeft="4dp">
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                android:text="@string/nave_supplier"
+                style="@style/CategoryStyle" />
+
+            <!-- Input fields -->
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:paddingStart="4dp"
+                android:orientation="vertical"
+                android:paddingLeft="4dp">
+
+                <!-- Spinner Dropdown -->
+                <!--   <Spinner builtin but use searchablespinner library  -->
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                    android:id="@+id/Spinner_product_supplier"
+                    style="@style/EditorFieldStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dip"
+                    android:layout_marginTop="20dip"
+                    android:layout_marginRight="8dip"
+                    android:spinnerMode="dialog" />
 
 
-            <!-- Supplier's Email field -->
-            <EditText
-                android:id="@+id/edit_product_supplier_email"
-                android:hint="@string/hint_product_supplier_email"
-                android:inputType="textEmailAddress"
-                style="@style/EditorFieldStyle" />
-
-
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <!-- supplier name category -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal">
+     <!--&lt;!&ndash; Email category &ndash;&gt;-->
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:orientation="horizontal">-->
 
-        <!-- Label -->
-        <TextView
-            android:text="@string/hint_product_supplier_name"
-            style="@style/CategoryStyle" />
+        <!--&lt;!&ndash; Label &ndash;&gt;-->
+        <!--<TextView-->
+            <!--android:text="@string/hint_product_supplier_email"-->
+            <!--style="@style/CategoryStyle" />-->
 
-        <!-- Input fields -->
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="3"
-            android:paddingStart="4dp"
-            android:orientation="vertical"
-            android:paddingLeft="4dp">
-
-
-            <!-- Supplier's Email field -->
-            <EditText
-                android:id="@+id/edit_product_supplier_name"
-                android:hint="@string/hint_product_supplier_name"
-                android:inputType="textEmailAddress"
-                style="@style/EditorFieldStyle" />
+        <!--&lt;!&ndash; Input fields &ndash;&gt;-->
+        <!--<LinearLayout-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="3"-->
+            <!--android:paddingStart="4dp"-->
+            <!--android:orientation="vertical"-->
+            <!--android:paddingLeft="4dp">-->
 
 
-        </LinearLayout>
-    </LinearLayout>
+            <!--&lt;!&ndash; Supplier's Email field &ndash;&gt;-->
+            <!--<EditText-->
+                <!--android:id="@+id/edit_product_supplier_email"-->
+                <!--android:hint="@string/hint_product_supplier_email"-->
+                <!--android:inputType="textEmailAddress"-->
+                <!--style="@style/EditorFieldStyle" />-->
+
+
+        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
+
+    <!--&lt;!&ndash; supplier name category &ndash;&gt;-->
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--&lt;!&ndash; Label &ndash;&gt;-->
+        <!--<TextView-->
+            <!--android:text="@string/hint_product_supplier_name"-->
+            <!--style="@style/CategoryStyle" />-->
+
+        <!--&lt;!&ndash; Input fields &ndash;&gt;-->
+        <!--<LinearLayout-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="3"-->
+            <!--android:paddingStart="4dp"-->
+            <!--android:orientation="vertical"-->
+            <!--android:paddingLeft="4dp">-->
+
+
+             <!--Supplier's Email field-->
+            <!--<EditText-->
+                <!--android:id="@+id/edit_product_supplier_name"-->
+                <!--android:hint="@string/hint_product_supplier_name"-->
+                <!--android:inputType="textEmailAddress"-->
+                <!--style="@style/EditorFieldStyle" />-->
+
+        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
 
     <!-- Location category -->
     <LinearLayout
@@ -423,6 +470,26 @@
 
     </LinearLayout>
 
- </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/but_save_product"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="105dp"
+                android:layout_marginEnd="105dp"
+                android:background="@drawable/ic_save"
+                android:textColor="@color/normalColor"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+      </LinearLayout>
+
+    </ScrollView>
+
 </LinearLayout>
-</ScrollView>

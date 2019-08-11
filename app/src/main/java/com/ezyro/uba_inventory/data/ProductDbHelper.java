@@ -1,10 +1,14 @@
 package com.ezyro.uba_inventory.data;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.ezyro.uba_inventory.data.ProductContract.ProductEntry;
+//import com.ezyro.uba_inventory.data.ProductContract.ProductEntry;
+//import com.ezyro.uba_inventory.data.ProductContract.CategoryEntry;
+import com.ezyro.uba_inventory.data.ProductContract.*;
 
 /**
  * Database helper for Products app. It manages database creation and version management.
@@ -29,21 +33,45 @@ public class ProductDbHelper extends SQLiteOpenHelper {
 
     /**
      * This method is called when the database is created for the first time.
-     */
+     */// Create a String that contains the SQL statement to create the product table
+    String SQL_CREATE_PRODUCTS_TABLE =  "CREATE TABLE " + ProductEntry.TABLE_NAME + " ("
+            + ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + ProductEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, "
+//            + ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME + " TEXT NOT NULL, "
+//            + ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL + " TEXT NOT NULL,"
+            + ProductEntry.COLUMN_PRODUCT_CATEGORY_NAME + " TEXT, "
+            + ProductEntry.COLUMN_PRODUCT_UNIT_PRICE + " INTEGER NOT NULL DEFAULT 1, "
+            + ProductEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER NOT NULL DEFAULT 0, "
+            + ProductEntry.COLUMN_PRODUCT_IMAGE_PATH + " TEXT, "
+            + ProductEntry.COLUMN_STATUS + " INTEGER, "
+            + ProductEntry.COLUMN_PRODUCT_SUPPLIER_ID + " TEXT NOT NULL DEFAULT 0); ";
+
+
+     String SQL_CREATE_CATEGORY_TABLE =  "CREATE TABLE " + CategoryEntry.CATEGORY_TABLE_NAME + " ("
+            + CategoryEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + CategoryEntry.COLUMN_CATEGORY_NAME + " TEXT NOT NULL , "
+            + CategoryEntry.COLUMN_CATEGORY_ACTIVE + " INTEGER NOT NULL DEFAULT 1); ";
+
+     String SQL_CREATE_SUPPLIER_TABLE =  "CREATE TABLE " + SupplierEntry.SUPPLIER_TABLE_NAME + " ("
+            + SupplierEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + SupplierEntry.COLUMN_PRODUCT_SUPPLIER_NAME + " TEXT NOT NULL , "
+            + SupplierEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL + " TEXT, "
+            + SupplierEntry.COLUMN_PRODUCT_SUPPLIER_PHONE + " STRINGE NOT NULL , "
+            + SupplierEntry.COLUMN_PRODUCT_SUPPLIER_CITY + " TEXT ); ";
+
+
+
+
+
+
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create a String that contains the SQL statement to create the product table
-        String SQL_CREATE_PRODUCTS_TABLE =  "CREATE TABLE " + ProductEntry.TABLE_NAME + " ("
-                + ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + ProductEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, "
-                + ProductEntry.COLUMN_PRODUCT_UNIT_PRICE + " INTEGER NOT NULL DEFAULT 1, "
-                + ProductEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER NOT NULL DEFAULT 0, "
-                + ProductEntry.COLUMN_PRODUCT_IMAGE_PATH + " TEXT, "
-                + ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME + " TEXT NOT NULL, "
-                + ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL + " TEXT NOT NULL);";
+
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_PRODUCTS_TABLE);
+        db.execSQL(SQL_CREATE_CATEGORY_TABLE);
+        db.execSQL(SQL_CREATE_SUPPLIER_TABLE);
     }
 
     /**
@@ -52,5 +80,31 @@ public class ProductDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // The database is still at version 1, so there's nothing to do be done here.
+    }
+
+    /*
+     * this method is for getting all the unsynced name
+     * so that we can sync it with database
+     * */
+    public Cursor getUnsyncedProduct() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "SELECT * FROM " + ProductEntry.TABLE_NAME + " WHERE " + ProductEntry.COLUMN_STATUS + " = 0;";
+        Cursor c = db.rawQuery(sql, null);
+        return c;
+    }
+
+    /*
+     * This method taking two arguments
+     * first one is the id of the product for which
+     * we have to update the sync status
+     * and the second one is the status that will be changed
+     * */
+    public boolean updateProductStatus(int id, int status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ProductEntry.COLUMN_STATUS, status);
+        db.update(ProductEntry.TABLE_NAME, contentValues, ProductEntry._ID + "=" + id, null);
+       // db.close();
+        return true;
     }
 }

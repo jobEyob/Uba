@@ -1,6 +1,7 @@
 package com.ezyro.uba_inventory;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -69,13 +70,23 @@ public class HomeFragment extends Fragment  {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        final Button ok = v.findViewById(R.id.fa_button);
+        final Button add = v.findViewById(R.id.fa_button);
+        final Button remove = v.findViewById(R.id.button_remove);
 
-        ok.setOnClickListener(new View.OnClickListener() {
+        add.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                Toast.makeText(getActivity(), "OK!", Toast.LENGTH_LONG ).show();
-                ok.setText("ok button");
+               // Toast.makeText(getActivity(), "OK!", Toast.LENGTH_LONG ).show();
+                Intent fintent = new Intent(getActivity(), EditorActivity.class);
+                startActivity(fintent);
+
+            }});
+        remove.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+               // Toast.makeText(getActivity(), "OK!", Toast.LENGTH_LONG ).show();
+                Intent fintent = new Intent(getActivity(), CatalogActivity.class);
+                startActivity(fintent);
 
             }});
 
@@ -86,7 +97,7 @@ public class HomeFragment extends Fragment  {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //you can set the title for your toolbar here for different fragments different titles
-        getActivity().setTitle("Menu 1");
+        //getActivity().setTitle("Home");
     }
 
     // TODO: Rename method, update argument and hook method into UI event

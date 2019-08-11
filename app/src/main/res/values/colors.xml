@@ -11,7 +11,7 @@
     <color name="colorPrimaryDark">#c0403c</color>
 
     <!-- Accent color for UI controls like checkboxes and text fields -->
-    <color name="colorAccent">#F0514B</color>
+    <color name="colorAccent">#f0514b</color>
 
     <!-- Primary color for the editor -->
     <color name="editorColorPrimary">#f0514b</color>
@@ -31,7 +31,7 @@
     <color name="primary_dark">#2ce129</color>
     <color name="primary_darker">#5acc1d</color>
     <color name="accent">#ece6e6</color>
-    <color name="colorEmptyStock">#F44336</color>
+    <color name="colorEmptyStock">#f44336</color>
     <color name="black">#000000</color>
     <color name="jet">#222222</color>
     <color name="oil">#333333</color>
@@ -40,5 +40,5 @@
     <color name="aluminum">#999999</color>
     <color name="base">#AAAAAA</color>
     <color name="iron">#cccccc</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#ffffff</color>
 </resources>

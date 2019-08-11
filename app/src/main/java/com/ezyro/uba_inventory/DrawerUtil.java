@@ -50,40 +50,40 @@ public class DrawerUtil {
         PrimaryDrawerItem drawerItemHome = new PrimaryDrawerItem().withIdentifier(1)
                 .withName(R.string.nave_activity_title_Home).withIcon(R.drawable.ic_home);
         PrimaryDrawerItem drawerItemProductList = new PrimaryDrawerItem()
-                .withIdentifier(2).withName(R.string.nave_activity_title_product_list).withIcon(R.drawable.ic_menu_camera);
+                .withIdentifier(2).withName(R.string.nave_activity_title_product_list).withIcon(R.drawable.ic_product_list);
 
 
         PrimaryDrawerItem drawerItemAddProduct = new PrimaryDrawerItem().withIdentifier(3)
-                .withName(R.string.editor_activity_and_nave_title_add_product).withIcon(R.drawable.ic_menu_manage);
+                .withName(R.string.editor_activity_and_nave_title_add_product).withIcon(R.drawable.ic_add_product);
         PrimaryDrawerItem drawerItemCategory = new PrimaryDrawerItem().withIdentifier(4)
-                .withName(R.string.nave_activity_title_product_category).withIcon(R.drawable.ic_menu_share);
+                .withName(R.string.nave_activity_title_product_category).withIcon(R.drawable.ic_category);
         PrimaryDrawerItem drawerItemItem = new PrimaryDrawerItem().withIdentifier(5)
-                .withName(R.string.nave_activity_title_product_item).withIcon(R.drawable.ic_menu_slideshow);
+                .withName(R.string.nave_activity_title_product_item).withIcon(R.drawable.ic_list);
 
         SectionDrawerItem sectionDrawerItemCommun = new SectionDrawerItem().withName("Communicate");
 
         PrimaryDrawerItem drawerItemSupplier = new PrimaryDrawerItem().withIdentifier(6)
-                .withName(R.string.nave_supplier).withIcon(R.drawable.ic_menu_send);
+                .withName(R.string.nave_supplier).withIcon(R.drawable.ic_supplier);
 
         PrimaryDrawerItem drawerItemOrders = new PrimaryDrawerItem().withIdentifier(7)
-                .withName(R.string.nave_order_product).withIcon(R.drawable.ic_menu_send);
+                .withName(R.string.nave_order_product).withIcon(R.drawable.ic_orders);
 
         SectionDrawerItem sectionDrawerItemReport = new SectionDrawerItem().withName("Report");
 
          PrimaryDrawerItem drawerItemStatistics = new PrimaryDrawerItem().withIdentifier(8)
-                .withName(R.string.nave_statistics).withIcon(R.drawable.ic_menu_send);
+                .withName(R.string.nave_statistics).withIcon(R.drawable.ic_statistc);
 
         PrimaryDrawerItem drawerItemExport = new PrimaryDrawerItem().withIdentifier(9)
-                .withName(R.string.nave_export_data).withIcon(R.drawable.ic_menu_send);
+                .withName(R.string.nave_export_data).withIcon(R.drawable.ic_export);
 
         SectionDrawerItem sectionDrawerItemUsers = new SectionDrawerItem().withName("Users");
 
 //        SecondaryDrawerItem drawerItemAdduser = new SecondaryDrawerItem().withIdentifier(10).withName(R.string.nave_add_users).withIcon(R.drawable.ic_menu_send);
 //        SecondaryDrawerItem drawerItemMangeuser = new SecondaryDrawerItem().withIdentifier(11).withName(R.string.nave_manage_users).withIcon(R.drawable.ic_menu_send);
 
-        ExpandableDrawerItem expandableDrawerItem = new ExpandableDrawerItem().withName(R.string.users).withIcon(R.drawable.ic_menu_gallery).withIdentifier(19).withSelectable(false).withSubItems(
-                new SecondaryDrawerItem().withName(R.string.nave_add_users).withLevel(2).withIcon(R.drawable.ic_menu_slideshow).withIdentifier(10),
-                new SecondaryDrawerItem().withName(R.string.nave_manage_users).withLevel(2).withIcon(R.drawable.ic_menu_share).withIdentifier(11)
+        ExpandableDrawerItem expandableDrawerItem = new ExpandableDrawerItem().withName(R.string.users).withIcon(R.drawable.ic_user).withIdentifier(19).withSelectable(false).withSubItems(
+                new SecondaryDrawerItem().withName(R.string.nave_add_users).withLevel(2).withIcon(R.drawable.ic_add_user).withIdentifier(10),
+                new SecondaryDrawerItem().withName(R.string.nave_manage_users).withLevel(2).withIcon(R.drawable.ic_manege_user).withIdentifier(11)
         );
 
 
@@ -101,8 +101,8 @@ public class DrawerUtil {
                        // drawerEmptyItem,drawerEmptyItem,drawerEmptyItem,
                         drawerItemHome,
                         drawerItemProductList,
-                        drawerItemCategory,
                         drawerItemAddProduct,
+                        drawerItemCategory,
                         drawerItemItem,
                         sectionDrawerItemCommun,
                         new DividerDrawerItem(),
