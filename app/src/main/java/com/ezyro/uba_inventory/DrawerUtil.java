@@ -151,10 +151,10 @@ public class DrawerUtil {
 //                            Intent intent = new Intent(activity, OrederActivity.class);
 //                            view.getContext().startActivity(intent);
 //                        }
-//                        else if(drawerItem.getIdentifier() == 8 && !(activity instanceof StatisticsActivity)){
-//                            Intent intent = new Intent(activity, StatisticsActivity.class);
-//                            view.getContext().startActivity(intent);
-//                        }
+                        else if(drawerItem.getIdentifier() == 8 && !(activity instanceof StatisticsActivity)){
+                            Intent intent = new Intent(activity, StatisticsActivity.class);
+                            view.getContext().startActivity(intent);
+                        }
 //                        else if(drawerItem.getIdentifier() == 9 && !(activity instanceof ExportActivity)){
 //                            Intent intent = new Intent(activity, ExportActivity.class);
 //                            view.getContext().startActivity(intent);

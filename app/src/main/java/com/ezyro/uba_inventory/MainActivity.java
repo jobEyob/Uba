@@ -164,7 +164,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_order) {
 
         }else if (id == R.id.nav_statistics) {
-
+            Intent intent = new Intent(this, StatisticsActivity.class);
+            startActivity(intent);
         }else if (id == R.id.nav_add_user) {
 
 

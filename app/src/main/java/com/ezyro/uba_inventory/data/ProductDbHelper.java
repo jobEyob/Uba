@@ -10,6 +10,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 //import com.ezyro.uba_inventory.data.ProductContract.CategoryEntry;
 import com.ezyro.uba_inventory.data.ProductContract.*;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+
 /**
  * Database helper for Products app. It manages database creation and version management.
  */
@@ -59,6 +63,13 @@ public class ProductDbHelper extends SQLiteOpenHelper {
             + SupplierEntry.COLUMN_PRODUCT_SUPPLIER_PHONE + " STRINGE NOT NULL , "
             + SupplierEntry.COLUMN_PRODUCT_SUPPLIER_CITY + " TEXT ); ";
 
+String SQL_CREATE_STATISTICS_TABLE =  "CREATE TABLE " + StatisticEntry.STATISTICS_TABLE_NAME + " ("
+            + StatisticEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + StatisticEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL , "
+            + StatisticEntry.COLUMN_PRODUCT_UNIT_PRICE + " INTEGER, "
+            + StatisticEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER NOT NULL , "
+            + StatisticEntry.COLUMN_PRODUCT_SELL_DATE + " STRINGE ); ";
+
 
 
 
@@ -72,6 +83,7 @@ public class ProductDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_PRODUCTS_TABLE);
         db.execSQL(SQL_CREATE_CATEGORY_TABLE);
         db.execSQL(SQL_CREATE_SUPPLIER_TABLE);
+        db.execSQL(SQL_CREATE_STATISTICS_TABLE);
     }
 
     /**
@@ -106,5 +118,38 @@ public class ProductDbHelper extends SQLiteOpenHelper {
         db.update(ProductEntry.TABLE_NAME, contentValues, ProductEntry._ID + "=" + id, null);
        // db.close();
         return true;
+    }
+
+    public boolean statistic (String Pname, int price, int quantity, String date) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(StatisticEntry.COLUMN_PRODUCT_NAME, Pname);
+        contentValues.put(StatisticEntry.COLUMN_PRODUCT_UNIT_PRICE, price);
+        contentValues.put(StatisticEntry.COLUMN_PRODUCT_QUANTITY, quantity);
+        contentValues.put(StatisticEntry.COLUMN_PRODUCT_SELL_DATE, date);
+
+
+
+        db.insert(StatisticEntry.STATISTICS_TABLE_NAME, null, contentValues);
+        //db.close();
+        return true;
+    }
+
+    // Get User Details
+    public ArrayList<HashMap<String, String>> GetStatistics(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<HashMap<String, String>> userList = new ArrayList<>();
+        String query = "SELECT * FROM "+ StatisticEntry.STATISTICS_TABLE_NAME;
+        Cursor cursor = db.rawQuery(query,null);
+        while (cursor.moveToNext()){
+            HashMap<String,String> user = new HashMap<>();
+            user.put("pname",cursor.getString(cursor.getColumnIndex(StatisticEntry.COLUMN_PRODUCT_NAME)));
+            user.put("unit_price",cursor.getString(cursor.getColumnIndex(StatisticEntry.COLUMN_PRODUCT_UNIT_PRICE)));
+            user.put("quantity",cursor.getString(cursor.getColumnIndex(StatisticEntry.COLUMN_PRODUCT_QUANTITY)));
+            user.put("date",cursor.getString(cursor.getColumnIndex(StatisticEntry.COLUMN_PRODUCT_SELL_DATE)));
+            userList.add(user);
+        }
+        return  userList;
     }
 }

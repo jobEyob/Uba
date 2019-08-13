@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-android:layout_height="@dimen/list_item_height"
-android:minHeight="@dimen/list_item_height"
-android:paddingStart="@dimen/activity_margin"
-android:orientation="vertical"
+  android:layout_height="170dp"
+  android:minHeight="170dp"
+ android:paddingStart="@dimen/activity_margin"
+   android:orientation="vertical"
     android:paddingLeft="@dimen/activity_margin">
 
     <TextView
@@ -21,7 +21,7 @@ android:orientation="vertical"
 
     <LinearLayout
         android:layout_width="366dp"
-        android:layout_height="121dp"
+        android:layout_height="match_parent"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -54,6 +54,17 @@ android:orientation="vertical"
                 android:textColor="@color/colorListViewLabels"
                 android:textSize="24sp" />
 
+            <!--<EditText-->
+                <!--android:id="@+id/pro_quantity"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:ems="10"-->
+                <!--android:inputType="number"-->
+                <!--android:hint="Quantity for sell ??"-->
+                <!--android:textColorHint="@color/md_purple_500"-->
+                <!--android:textColor="@color/md_green_600"-->
+                <!--android:textSize="16sp" />-->
+
             <ImageView
                 android:id="@+id/sell_button"
                 android:layout_width="100dp"
@@ -62,6 +73,8 @@ android:orientation="vertical"
                 android:layout_marginBottom="@dimen/transaction_button_margin"
                 android:focusable="false"
                 android:src="@drawable/img_sell_now" />
+
+
 
         </LinearLayout>
 
@@ -80,12 +93,19 @@ android:orientation="vertical"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="@android:color/black" />
 
+
             <TextView
                 android:id="@+id/stock_level_value"
                 android:layout_width="match_parent"
                 android:layout_height="33dp"
                 android:gravity="center_vertical"
                 android:textAppearance="?android:textAppearanceMedium" />
+            <!--<EditText-->
+                <!--android:id="@+id/total_price"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="33dp"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:textAppearance="?android:textAppearanceMedium" />-->
 
             <ImageView
                 android:id="@+id/imageViewStatus"
@@ -95,6 +115,7 @@ android:orientation="vertical"
                 android:layout_marginStart="100dp"
                 android:layout_marginLeft="100dp"
                 android:background="@drawable/ic_success" />
+
 
 
         </LinearLayout>

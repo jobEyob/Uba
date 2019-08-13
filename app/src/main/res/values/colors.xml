@@ -23,7 +23,7 @@
     <color name="colorListViewLabels">#9E9E9E</color>
 
     <!-- Color for the positive stock level -->
-    <color name="colorPositiveStock">#4CAF50</color>
+    <color name="colorPositiveStock">#4caf50</color>
 
     <!-- Color for the empty stock level -->
     <!--login activity-->

@@ -237,4 +237,52 @@ public static final String WEB_SERVER_URL = "http://192.168.43.130:8080";
 
 
     }
+
+    /**
+     * Inner class that defines constant values for the supplier database table.
+     * Each entry in the table represents a single supplier.
+     */
+    public static final class StatisticEntry implements BaseColumns {
+
+
+        /** Name of database table for statistic */
+        public final static String STATISTICS_TABLE_NAME = "statistic";
+
+        /**
+         * Unique ID number for the statistic (only for use in the database table).
+         *
+         * Type: INTEGER
+         */
+        public final static String _ID = BaseColumns._ID;
+
+        /**
+         * Name of the statistic of the product.
+         *
+         * Type: TEXT
+         */
+        public final static String COLUMN_PRODUCT_NAME = "statistic_name";
+
+        /**
+         * Unit price of the product.
+         *
+         * Type: INTEGER
+         */
+        public final static String COLUMN_PRODUCT_UNIT_PRICE = "unit_price";
+
+        /**
+         * Available quantity of the product.
+         *
+         * Type: INTEGER
+         */
+        public final static String COLUMN_PRODUCT_QUANTITY = "quantity";
+
+
+        /**
+         * city of the statistic of the product.
+         *
+         * Type: INTEGER
+         */
+        public final static String COLUMN_PRODUCT_SELL_DATE = "sell_date";
+
+    }
 }

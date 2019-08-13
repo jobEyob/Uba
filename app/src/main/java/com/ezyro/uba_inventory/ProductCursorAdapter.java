@@ -3,23 +3,38 @@ package com.ezyro.uba_inventory;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.ezyro.uba_inventory.data.ProductContract.ProductEntry;
+import com.ezyro.uba_inventory.data.ProductDbHelper;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import es.dmoral.toasty.Toasty;
 
 class ProductCursorAdapter extends CursorAdapter {
     /** Tag for the log messages */
     public static final String LOG_TAG = ProductCursorAdapter.class.getSimpleName();
+
+   private String productName;
+   private int productUnitPrice;
+   private int sellQuanitiy = 0;
+   private int productQuanity;
+   private int totalPrice;
+    private ProductDbHelper db;
 
     /**
      * Constructs a new {@link ProductCursorAdapter}.
@@ -64,6 +79,9 @@ class ProductCursorAdapter extends CursorAdapter {
         TextView quantityTextView = (TextView) view.findViewById(R.id.stock_level_value);
         ImageView sellNowButtonImageView = (ImageView) view.findViewById(R.id.sell_button);
         ImageView imageViewStatus = (ImageView) view.findViewById(R.id.imageViewStatus);
+//        final EditText  Proqunitity = (EditText) view.findViewById(R.id.pro_quantity);
+//        final TextView totalPrice = (TextView) view.findViewById(R.id.total_price);
+
 
         // Set a TAG on the sell button with current position of cursor
         sellNowButtonImageView.setTag(position);
@@ -75,9 +93,9 @@ class ProductCursorAdapter extends CursorAdapter {
         int statusColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_STATUS);
 
         // Read the product attributes from the Cursor for the current product
-        String productName = cursor.getString(nameColumnIndex);
-        int productUnitPrice = cursor.getInt(unitPriceColumnIndex);
-        int productQuantity = cursor.getInt(quantityColumnIndex);
+         productName = cursor.getString(nameColumnIndex);
+         productUnitPrice = cursor.getInt(unitPriceColumnIndex);
+        final int productQuantity = cursor.getInt(quantityColumnIndex);
         int productStatus = cursor.getInt(statusColumnIndex);
 
 
@@ -92,6 +110,8 @@ class ProductCursorAdapter extends CursorAdapter {
         }
         else {
             quantityTextView.setTextColor(ContextCompat.getColor(context, R.color.colorPositiveStock));
+
+
         }
 
         //if the synced status is 0 displaying
@@ -102,9 +122,18 @@ class ProductCursorAdapter extends CursorAdapter {
         }else {
             imageViewStatus.setBackgroundResource(R.drawable.ic_success); }
 
+//        sellQuanitiy = Integer.parseInt(Proqunitity.getText().toString());
+//        int total = 0;
+//        total = sellQuanitiy * productUnitPrice;
+//
+//        totalPrice.setText("Total price is: = "+total);
+
         sellNowButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+//                Intent intent = new Intent(context, EditorActivity.class);
+//                context.startActivity(intent);
                 // Get the TAG of the view (sell ImageView) that was clicked on to arrive here
                 // Define a position from this TAG
                 Integer position = (Integer) v.getTag();
@@ -119,7 +148,14 @@ class ProductCursorAdapter extends CursorAdapter {
 
                 // If the stock level is still positive, then proceed with the sell of 1 unit
                 if(currentQuantity > 0) {
-                    sellProductUnit(context, rowId, currentQuantity);
+
+                   // sellQuanitiy = Integer.parseInt(Proqunitity.getText().toString());
+//                    int total = 0;
+//                   total = sellQuanitiy * productUnitPrice;
+//                    totalPrice.setText("Total price is: = "+total);
+                    showSellDiloge(context, rowId, currentQuantity);
+
+                    //sellProductUnit(context, rowId, currentQuantity,sellQuanitiy);
                 }
                 else {
                     // Otherwise, show a toast message saying that the sell action is not possible
@@ -130,14 +166,20 @@ class ProductCursorAdapter extends CursorAdapter {
 
             }
         });
+
+
+
     }
 
     /**
      * Helper method to sell a unit of a product
      */
-    private void sellProductUnit(Context context, Long rowId, int quantity) {
+    private void sellProductUnit(Context context, Long rowId, int quantity,int sellQuanitiy) {
         // sell 1 unit of the product by decrement its stock level by 1 unit.
-        quantity--;
+       // quantity--;
+
+        quantity = quantity - sellQuanitiy;
+
         // Form the content URI that represents the specific product that was clicked on.
         Uri currentProductUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, rowId);
         // Create a ContentValues objectURI and put the decremented stock level in it
@@ -150,14 +192,86 @@ class ProductCursorAdapter extends CursorAdapter {
         // Show a toast message depending on whether or not the update was successful.
         if (rowsAffected == 0) {
             // If no rows were affected, then there was an error with the update.
-            Toast.makeText(context, context.getString(R.string.catalog_sell_product_item_failed),
+            Toasty.error(context, context.getString(R.string.catalog_sell_product_item_failed),
                     Toast.LENGTH_SHORT).show();
 
         } else {
             // Otherwise, the sell was successful and we can display a toast.
-            Toast.makeText(context, context.getString(R.string.catalog_sell_product_item_successful),
+            Toasty.success(context,""+sellQuanitiy+" "+context.getString( R.string.catalog_sell_product_item_successful),
                     Toast.LENGTH_SHORT).show();
+
+            String pattern = "dd-MM-yy E 'at' HH:mm:ss a ";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            String date = simpleDateFormat.format(new Date());
+
+           db = new ProductDbHelper(context);
+           db.statistic(productName,productUnitPrice,sellQuanitiy,date);
+
+
+
         }
     }
+
+//public void showSellDiloge(Context context){
+//    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+//
+//    alert.setTitle("Title");
+//    alert.setMessage("Message");
+//
+//// Set an EditText view to get user input
+//    final EditText input = new EditText(context);
+//    alert.setView(input);
+//
+//
+//    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//        public void onClick(DialogInterface dialog, int whichButton) {
+//            String value = String.valueOf(input.getText());
+//            // Do something with value!
+//        }
+//    });
+//
+//    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//        public void onClick(DialogInterface dialog, int whichButton) {
+//            // Canceled.
+//        }
+//    });
+//
+//    alert.show();
+//}
+
+    public void showSellDiloge(final Context context, final Long rowId, final int quantity){
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptsView = li.inflate(R.layout.out_product,null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setView(promptsView);
+
+        final EditText  Proqunitity = (EditText) promptsView.findViewById(R.id.pro_quantity);
+        //final TextView totalPrice = (TextView) promptsView.findViewById(R.id.total_price);
+
+        builder.setCancelable(false);
+        builder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        productQuanity  = Integer.parseInt(Proqunitity.getText().toString().trim());
+
+                        sellProductUnit(context, rowId, quantity,productQuanity);
+
+                    }
+                });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        }) ;
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
+
 }
 

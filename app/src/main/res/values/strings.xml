@@ -247,7 +247,7 @@
     <string name="editor_delete_product_successful">Product deleted successfully</string>
 
     <!-- Toast message in catalog when a unit sale of given product has successfully been sold [CHAR LIMIT=NONE] -->
-    <string name="catalog_sell_product_item_successful">One unit has been sold</string>
+    <string name="catalog_sell_product_item_successful">  unit has been sold</string>
 
     <!-- Toast message in catalog when all products were successfully deleted [CHAR LIMIT=NONE] -->
     <string name="catalog_delete_all_products_successful">All products deleted</string>
